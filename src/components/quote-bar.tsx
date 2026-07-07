@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
-import { FileText } from 'lucide-react';
+import { FileText, X } from 'lucide-react';
 import { useQuote } from '@/context/quote-context';
 import { Button } from '@/components/ui/button';
 
 export function QuoteBar() {
-  const { count } = useQuote();
+  const { count, clear } = useQuote();
 
   return (
     <AnimatePresence>
@@ -19,20 +19,30 @@ export function QuoteBar() {
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] max-w-md"
         >
-          <div className="flex items-center justify-between gap-4 rounded-full bg-neutral-900 text-white pl-5 pr-2 py-2 shadow-xl shadow-black/20">
-            <div className="flex items-center gap-2 text-sm">
+          <div className="flex items-center justify-between gap-4 rounded-full bg-gray-600 text-white pl-5 pr-2 py-2 shadow-xl shadow-indigo-900/20 border border-indigo-500">
+            <div className="flex items-center gap-2 text-sm font-medium">
               <FileText className="w-4 h-4" />
               <span>
                 {count} {count === 1 ? 'product' : 'products'} selected
               </span>
             </div>
-            <Button
-              render={<Link href="/quote" />}
-              nativeButton={false}
-              className="rounded-full bg-white text-neutral-900 hover:bg-neutral-100 px-5"
-            >
-              Get Quote
-            </Button>
+            <div className="flex items-center gap-1">
+              <Button
+                render={<Link href="/quote" />}
+                nativeButton={false}
+                className="rounded-full bg-white text-indigo-600 hover:bg-indigo-50 px-5 font-semibold shadow-sm"
+              >
+                Get Quote
+              </Button>
+              <button
+                type="button"
+                onClick={() => clear()}
+                className="p-2 rounded-full hover:bg-gray-500 transition-colors"
+                aria-label="Clear quote"
+              >
+                <X className="w-5 h-5 text-gray-200" />
+              </button>
+            </div>
           </div>
         </motion.div>
       )}
