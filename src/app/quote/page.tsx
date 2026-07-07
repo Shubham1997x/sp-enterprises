@@ -27,8 +27,27 @@ export default function QuotePage() {
 
   const total = items.reduce((sum, p) => sum + p.price * qty(p.id), 0);
 
+  const WHATSAPP_NUMBER = '917275336699';
+
+  const buildWhatsAppMessage = () => {
+    const lines = [
+      `New quote request from ${form.name}`,
+      `Phone: ${form.phone}`,
+      form.email ? `Email: ${form.email}` : null,
+      '',
+      'Products:',
+      ...items.map((p) => `- ${p.name} x${qty(p.id)} — ₹${(p.price * qty(p.id)).toLocaleString('en-IN')}`),
+      '',
+      `Estimated total: ₹${total.toLocaleString('en-IN')}`,
+      form.message ? `\nNote: ${form.message}` : null,
+    ].filter(Boolean);
+    return lines.join('\n');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const message = buildWhatsAppMessage();
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
     setSubmitted(true);
   };
 
@@ -128,9 +147,9 @@ export default function QuotePage() {
                   <div className="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center mb-4">
                     <Check className="w-6 h-6 text-emerald-600" />
                   </div>
-                  <h3 className="font-semibold text-lg">Request sent</h3>
+                  <h3 className="font-semibold text-lg">Opening WhatsApp&hellip;</h3>
                   <p className="text-neutral-500 text-sm mt-1">
-                    Thanks {form.name || 'there'}, our team will reach out on {form.phone || 'your number'} shortly.
+                    Thanks {form.name || 'there'}, your quote request has been prepared in WhatsApp. Just hit send there and our team will reply on {form.phone || 'your number'} shortly.
                   </p>
                 </div>
               ) : (
@@ -166,7 +185,7 @@ export default function QuotePage() {
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
                   />
                   <Button type="submit" className="rounded-full bg-neutral-900 text-white hover:bg-neutral-800 h-11 mt-2">
-                    Send Quote Request
+                    Send Quote via WhatsApp
                   </Button>
                 </form>
               )}
